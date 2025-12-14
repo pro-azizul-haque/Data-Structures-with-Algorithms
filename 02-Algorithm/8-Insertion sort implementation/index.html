@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Insertion Sort Visualization</title>
+  <style>
+    .bar-container {
+      display: flex;
+      align-items: flex-end;
+      height: 300px;
+      margin: 20px;
+      gap: 5px;
+    }
+    .bar {
+      width: 30px;
+      background-color: teal;
+      text-align: center;
+      color: white;
+    }
+    .current {
+      background-color: orange;
+    }
+    .compared {
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>Insertion Sort Visualization</h2>
+  <div class="bar-container" id="container"></div>
+  <button onclick="startSort()">Start Sorting</button>
+
+  <script>
+    const arr = [50, 30, 70, 10, 90, 40];
+    const container = document.getElementById('container');
+
+    // Create bars
+    function renderArray(highlight = {}) {
+      container.innerHTML = '';
+      arr.forEach((value, index) => {
+        const bar = document.createElement('div');
+        bar.classList.add('bar');
+        bar.style.height = value * 3 + 'px';
+        bar.textContent = value;
+
+        if (index === highlight.current) bar.classList.add('current');
+        if (index === highlight.compared) bar.classList.add('compared');
+
+        container.appendChild(bar);
+      });
+    }
+
+    renderArray();
+
+    async function startSort() {
+      for (let i = 1; i < arr.length; i++) {
+        let key = arr[i];
+        let j = i - 1;
+
+        // Highlight current key
+        renderArray({ current: i });
+        await sleep(500);
+
+        while (j >= 0 && arr[j] > key) {
+          arr[j + 1] = arr[j];
+
+          // Highlight comparison
+          renderArray({ current: i, compared: j });
+          await sleep(500);
+
+          j--;
+        }
+        arr[j + 1] = key;
+
+        // Render after placing key
+        renderArray({ current: j + 1 });
+        await sleep(500);
+      }
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+  </script>
+</body>
+</html>
